@@ -2,42 +2,72 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Book List</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>My Books</h1>
-    
-    <div class="actions">
-        <a th:href="@{/books/add}" class="button-primary">Add New Book</a>
-    </div>
-    
-    <div class="books-list">
-        <div th:each="book : ${books}" class="book-item">
-            <h3 th:text="${book.title}">Book Title</h3>
-            <p>By <span th:text="${book.author}">Author Name</span></p>
-            
-            <div th:id="'book-' + ${book.id} + '-status'" 
-                 th:text="${book.status}">Status</div>
-            
-            <div class="progress">
-                <span th:id="'book-' + ${book.id} + '-current-page'"
-                      th:text="${book.currentPage}">0</span>
-                / <span th:text="${book.totalPages}">100</span> pages
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">My Books</h1>
+        
+        <div class="mb-8">
+            <a th:href="@{/books/add}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                Add New Book
+            </a>
+        </div>
+        
+        <div class="grid gap-6">
+            <div th:each="book : ${books}" 
+                 class="book-item bg-white rounded-lg shadow-md p-6">
+                <h3 th:text="${book.title}" 
+                    class="text-xl font-semibold text-gray-900 mb-2">
+                    Book Title
+                </h3>
+                
+                <p class="text-gray-600 mb-4">
+                    By <span th:text="${book.author}">Author Name</span>
+                </p>
+                
+                <div th:id="'book-' + ${book.id} + '-status'" 
+                     th:text="${book.status}"
+                     class="inline-block px-3 py-1 text-sm font-medium rounded-full mb-4"
+                     th:classappend="${
+                         book.status == T(io.oalbader.readingprogress.model.BookStatus).COMPLETED ? 'bg-green-100 text-green-800' :
+                         book.status == T(io.oalbader.readingprogress.model.BookStatus).IN_PROGRESS ? 'bg-blue-100 text-blue-800' :
+                         'bg-gray-100 text-gray-800'
+                     }">
+                    Status
+                </div>
+                
+                <div class="progress text-gray-700 mb-4">
+                    <span th:id="'book-' + ${book.id} + '-current-page'"
+                          th:text="${book.currentPage}"
+                          class="font-medium">0</span>
+                    / <span th:text="${book.totalPages}" 
+                           class="font-medium">100</span> pages
+                </div>
+                
+                <form th:hx-post="@{/books/{id}/update(id=${book.id})}"
+                      hx-target="closest .book-item"
+                      hx-swap="innerHTML"
+                      class="flex gap-4 mb-4">
+                    <input type="number" 
+                           name="newPage"
+                           th:value="${book.currentPage}"
+                           min="0"
+                           th:max="${book.totalPages}"
+                           class="block w-24 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                        Update Progress
+                    </button>
+                </form>
+                
+                <a th:href="@{/books/{id}/history(id=${book.id})}"
+                   class="text-blue-600 hover:text-blue-800 font-medium">
+                    View History
+                </a>
             </div>
-            
-            <form th:hx-post="@{/books/{id}/update(id=${book.id})}"
-                  hx-target="closest .book-item"
-                  hx-swap="innerHTML">
-                <input type="number" 
-                       name="newPage"
-                       th:value="${book.currentPage}"
-                       min="0"
-                       th:max="${book.totalPages}">
-                <button type="submit">Update Progress</button>
-            </form>
-            
-            <a th:href="@{/books/{id}/history(id=${book.id})}">View History</a>
         </div>
     </div>
     

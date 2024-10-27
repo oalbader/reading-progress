@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reading History</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <h1>Reading History for <span th:text="${book.title}">Book Title</span></h1>
+    
+    <div class="history-list">
+        <div th:if="${sessions.empty}" class="no-sessions">
+            No reading sessions recorded yet.
+        </div>
+        
+        <div th:each="readingSeasion : ${sessions}" class="session-item">
+            <div class="session-date" 
+                 th:text="${#temporals.format(readingSeasion.date, 'MMM dd, yyyy HH:mm')}">
+                Date
+            </div>
+            <div class="pages-read">
+                Pages read: <span th:text="${readingSeasion.pagesRead}">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="actions">
+        <a th:href="@{/books}" class="button-secondary">Back to Books</a>
+    </div>
+</body>
+</html>

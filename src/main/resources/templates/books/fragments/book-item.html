@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="book-item" class="book-item">
+        <h3 th:text="${book.title}">Book Title</h3>
+        <p>By <span th:text="${book.author}">Author Name</span></p>
+        
+        <div th:id="'book-' + ${book.id} + '-status'" 
+             th:text="${book.status}">Status</div>
+        
+        <div class="progress">
+            <span th:id="'book-' + ${book.id} + '-current-page'"
+                  th:text="${book.currentPage}">0</span>
+            / <span th:text="${book.totalPages}">100</span> pages
+        </div>
+        
+        <form th:hx-post="@{/books/{id}/update(id=${book.id})}"
+              hx-target="closest .book-item"
+              hx-swap="innerHTML">
+            <input type="number" 
+                   name="newPage"
+                   th:value="${book.currentPage}"
+                   min="0"
+                   th:max="${book.totalPages}">
+            <button type="submit">Update Progress</button>
+        </form>
+        
+        <a th:href="@{/books/{id}/history(id=${book.id})}">View History</a>
+    </div>
+</body>
+</html>

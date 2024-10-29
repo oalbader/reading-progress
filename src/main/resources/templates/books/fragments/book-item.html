@@ -2,8 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="book-item" class="book-item">
-        <h3 th:text="${book.title}">Book Title</h3>
-        <p>By <span th:text="${book.author}">Author Name</span></p>
+        <h3 th:text="${book.title}" class="text-xl font-semibold text-gray-900 mb-2 sm:text-lg">
+            Book Title
+        </h3>
+        <p class="text-gray-600 mb-4 sm:text-sm">
+            By <span th:text="${book.author}">Author Name</span>
+        </p>
         
         <div th:id="'book-' + ${book.id} + '-status'" 
              th:text="${book.status}">Status</div>

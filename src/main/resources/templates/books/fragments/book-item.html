@@ -1,5 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script>
+        console.log('Script loaded');
+        document.body.addEventListener('htmx:configRequest', function(evt) {
+            const token = document.querySelector('input[name="_csrf"]').value;
+            console.log('CSRF Token:', token);
+            console.log('Before headers:', evt.detail.headers);
+            evt.detail.headers['X-CSRF-TOKEN'] = token;
+            console.log('After headers:', evt.detail.headers);
+        });
+    </script>
+</head>
 <body>
     <div th:fragment="book-item" class="book-item">
         <h3 th:text="${book.title}" class="text-xl font-semibold text-gray-900 mb-2 sm:text-lg">
@@ -20,7 +32,9 @@
         
         <form th:hx-post="@{/books/{id}/update(id=${book.id})}"
               hx-target="closest .book-item"
-              hx-swap="innerHTML">
+              hx-swap="innerHTML"
+              th:hx-headers="|X-CSRF-TOKEN: ${_csrf.token}|">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="number" 
                    name="newPage"
                    th:value="${book.currentPage}"

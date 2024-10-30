@@ -37,4 +37,6 @@ out/
 .vscode/
 
 ### Application Data ###
-/data/
+*.dump
+*.sql
+pgdata/

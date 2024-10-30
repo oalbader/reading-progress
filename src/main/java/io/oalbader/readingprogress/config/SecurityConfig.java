@@ -25,7 +25,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/css/**", "/js/**", "/register", "/h2-console/**").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/register").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -38,10 +38,6 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login")
             )
             .userDetailsService(userDetailsService);
-
-        // For H2 console
-        http.csrf(csrf -> csrf.disable());
-        http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();
     }

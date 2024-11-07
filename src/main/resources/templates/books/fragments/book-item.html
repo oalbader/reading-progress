@@ -28,6 +28,9 @@
                   class="font-medium">0</span>
             / <span th:text="${book.totalPages}" 
                    class="font-medium">100</span> pages
+            <span class="ml-2 text-blue-600 font-medium">
+                (<span th:text="${book.progressPercentage}">0</span>%)
+            </span>
         </div>
         
         <form th:hx-post="@{/books/{id}/update(id=${book.id})}"
@@ -48,9 +51,9 @@
             </div>
         </form>
         
-        <a th:href="@{/books/{id}/history(id=${book.id})}"
+        <a th:href="@{/books/{id}(id=${book.id})}"
            class="block w-full text-center px-4 py-2 text-lg md:text-base text-blue-600 hover:text-blue-800 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
-            View History
+            View Details
         </a>
     </div>
 </body>

@@ -41,8 +41,17 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/books", true)
             )
             .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID", "reading-progress-remember-me")
                 .permitAll()
-                .logoutSuccessUrl("/login")
+            )
+            .rememberMe(remember -> remember
+                .key("uniqueAndSecureKey123")
+                .tokenValiditySeconds(7 * 24 * 60 * 60)
+                .rememberMeParameter("remember-me")
+                .rememberMeCookieName("reading-progress-remember-me")
             )
             .userDetailsService(userDetailsService);
 

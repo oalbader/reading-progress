@@ -29,9 +29,16 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReadingSession> readingSessions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("createdAt DESC")
+    private List<Note> notes = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     @Column()
     private BookStatus status = BookStatus.NOT_STARTED;
+
+    @Column(columnDefinition = "TEXT")
+    private String review;
 
     // Getters and setters
     public Long getId() { return id; }
@@ -55,6 +62,9 @@ public class Book {
     public List<ReadingSession> getReadingSessions() { return readingSessions; }
     public void setReadingSessions(List<ReadingSession> readingSessions) { this.readingSessions = readingSessions; }
 
+    public List<Note> getNotes() { return notes; }
+    public void setNotes(List<Note> notes) { this.notes = notes; }
+
     public BookStatus getStatus() { 
         return status; 
     }
@@ -63,9 +73,18 @@ public class Book {
         this.status = status; 
     }
 
+    public String getReview() { return review; }
+    public void setReview(String review) { this.review = review; }
+
     // Helper method to add reading session
     public void addReadingSession(ReadingSession readingSession) {
         readingSessions.add(readingSession);
         readingSession.setBook(this);
+    }
+
+    // Add this method to calculate percentage
+    public double getProgressPercentage() {
+        if (totalPages == 0) return 0.0;
+        return Math.round((currentPage * 100.0) / totalPages * 10.0) / 10.0;
     }
 }

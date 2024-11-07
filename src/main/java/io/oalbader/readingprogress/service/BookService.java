@@ -89,4 +89,20 @@ public class BookService {
     public Book saveBook(Book book) {
         return bookRepository.save(book);
     }
+
+    @Transactional
+    public Book updateReview(Long bookId, String review) {
+        Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+        
+        book.setReview(review);
+        return bookRepository.save(book);
+    }
+
+    @Transactional
+    public void deleteBook(Long id) {
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+        bookRepository.delete(book);
+    }
 }
